@@ -18,32 +18,40 @@ def write_exel(rowsUSD, rowsEUR):
 
     rowTable = 1
     colTable = 0
+    indexDate = 0
+    indexCurrency = 1
 
     dateFormat = workbook.add_format({'num_format': 'dd.mm.yy'})
     numberFormat = workbook.add_format({'num_format': '_-* #,##0.00 ₽_-'})
     for row in rowsUSD:
-        worksheet.write(rowTable, colTable, row[0], dateFormat)
+        worksheet.write(rowTable, colTable, row[indexDate], dateFormat)
         worksheet.write(rowTable, colTable + 1, row[1], numberFormat)
         rowTable += 1
 
     rowTable = 1
 
     for i in range(len(rowsUSD) - 1):
-        worksheet.write(rowTable, colTable + 2, rowsUSD[i][1] - rowsUSD[i+1][1], numberFormat)
+        if rowsEUR[i][indexCurrency] != 0:
+            worksheet.write(rowTable, colTable + 2, rowsUSD[i][indexCurrency] - rowsUSD[i + 1][indexCurrency], numberFormat)
+        else:
+            worksheet.write(rowTable, colTable + 2, 0, numberFormat)
         rowTable += 1
 
     rowTable = 1
     colTable += 3
 
     for row in rowsEUR:
-        worksheet.write(rowTable, colTable, row[0], dateFormat)
-        worksheet.write(rowTable, colTable + 1, row[1], numberFormat)
+        worksheet.write(rowTable, colTable, row[indexDate], dateFormat)
+        worksheet.write(rowTable, colTable + 1, row[indexCurrency], numberFormat)
         rowTable += 1
 
     rowTable = 1
 
     for i in range(len(rowsEUR) - 1):
-        worksheet.write(rowTable, colTable + 2, rowsEUR[i][1] - rowsEUR[i+1][1], numberFormat)
+        if rowsEUR[i][indexCurrency] != 0:
+            worksheet.write(rowTable, colTable + 2, rowsEUR[i][indexCurrency] - rowsEUR[i+1][indexCurrency], numberFormat)
+        else:
+            worksheet.write(rowTable, colTable + 2, 0, numberFormat)
         rowTable += 1
 
     colTable += 1

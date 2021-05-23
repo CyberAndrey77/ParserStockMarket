@@ -40,6 +40,8 @@ def parse_html(html):
     rows = build_list(table, rows)
 
     extraCharacter = '\n'
+    indexDate = 0
+    indexCurrency = 3
 
     for row in rows:
         for item in row:
@@ -47,20 +49,25 @@ def parse_html(html):
                 row.remove(item)
 
     for row in rows:
-        row[0] = datetime.datetime.strptime(row[0], '%d.%m.%Y').date()
-        row[3] = row[3].replace(',', '.')
+        row[indexDate] = datetime.datetime.strptime(row[indexDate], '%d.%m.%Y').date()
+        row[indexCurrency] = row[indexCurrency].replace(',', '.')
         try:
-            row[3] = float(row[3])
+            row[indexCurrency] = float(row[indexCurrency])
         except ValueError:
-            row[3] = 0
-
-    rows = sorted(rows, key=lambda x: x[0], reverse=True)
-
+            row[indexCurrency] = 0
 
     for row in rows:
-        for i in range(4, -1, -1):
-            if i != 0 and i != 3:
-                 del row[i]
+        for i in range(len(row) - 1, -1, -1):
+            if i != indexDate and i != indexCurrency:
+                del row[i]
+
+    month = datetime.datetime.today().month
+
+    for i in range(len(rows) - 1, -1, -1):
+        if rows[i][indexDate].month < month:
+            del rows[i]
+
+    rows = sorted(rows, key=lambda x: x[indexDate], reverse=True)
 
     return rows
 
@@ -87,7 +94,7 @@ def main():
 
     textMessage = 'В таблице ' + textMessage
 
-    emailSender.send_message('lapardin.andrey@mail.ru', textMessage, 'USD_EUR.xlsx')
+    #emailSender.send_message('lapardin.andrey@mail.ru', textMessage, 'USD_EUR.xlsx')
 
 
 if __name__ == '__main__':
