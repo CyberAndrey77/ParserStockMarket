@@ -94,7 +94,7 @@ def main():
 
     textMessage = 'В таблице ' + textMessage
 
-    #emailSender.send_message('lapardin.andrey@mail.ru', textMessage, 'USD_EUR.xlsx')
+    emailSender.send_message('lapardin.andrey@mail.ru', textMessage, 'USD_EUR.xlsx')
 
 
 if __name__ == '__main__':
